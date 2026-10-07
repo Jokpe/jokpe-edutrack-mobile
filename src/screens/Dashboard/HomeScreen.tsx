@@ -1,28 +1,28 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import ScreenContainer from '../../components/ScreenContainer';
 import StatCard from '../../components/StatCard';
+import { useAppData } from '../../context/AppDataContext';
 import { COLORS } from '../../theme/colors';
 
-const quickStats = [
-  { label: 'Students', value: '1,240', accent: COLORS.primary },
-  { label: 'Teachers', value: '54', accent: COLORS.secondary },
-  { label: 'Attendance', value: '92%', accent: COLORS.success },
-  { label: 'Pending', value: '12', accent: COLORS.warning },
-];
-
 export default function HomeScreen() {
+  const { students, staff, attendance } = useAppData();
+  const totalPresent = attendance.reduce((sum, item) => sum + item.present, 0);
+  const totalPossible = attendance.reduce((sum, item) => sum + item.total, 0);
+  const attendanceRate = totalPossible ? Math.round((totalPresent / totalPossible) * 100) : 0;
+
   return (
     <ScreenContainer title="Dashboard">
       <View style={styles.heroCard}>
         <Text style={styles.heroTitle}>Good morning</Text>
-        <Text style={styles.heroSubtitle}>Here is your school summary for today.</Text>
+        <Text style={styles.heroSubtitle}>Your school is performing well today.</Text>
       </View>
 
       <View style={styles.grid}>
-        {quickStats.map((stat) => (
-          <StatCard key={stat.label} label={stat.label} value={stat.value} accent={stat.accent} />
-        ))}
+        <StatCard label="Students" value={String(students.length)} accent={COLORS.primary} />
+        <StatCard label="Teachers" value={String(staff.length)} accent={COLORS.secondary} />
+        <StatCard label="Attendance" value={`${attendanceRate}%`} accent={COLORS.success} />
+        <StatCard label="Pending" value="12" accent={COLORS.warning} />
       </View>
 
       <View style={styles.panel}>
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginBottom: 16,
+    marginBottom: 14,
   },
   panel: {
     backgroundColor: '#fff',

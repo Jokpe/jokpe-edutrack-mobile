@@ -14,7 +14,8 @@ export default function SettingsScreen() {
         <Text style={styles.info}>{session?.school.schoolName}</Text>
         <Text style={styles.info}>School code: {session?.school.schoolCode}</Text>
         <Text style={styles.info}>Region: {session?.school.region}</Text>
-        <Text style={styles.info}>Phone: {session?.school.phone}</Text>
+        <Text style={styles.info}>District: {session?.school.district}</Text>
+        <Text style={styles.info}>Headmaster: {session?.school.headmaster}</Text>
       </View>
 
       <TouchableOpacity style={styles.button} onPress={() => logout()}>

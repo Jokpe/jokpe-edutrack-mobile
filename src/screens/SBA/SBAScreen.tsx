@@ -1,28 +1,29 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import ScreenContainer from '../../components/ScreenContainer';
+import { useAppData } from '../../context/AppDataContext';
 import { COLORS } from '../../theme/colors';
 
-const marks = [
-  { subject: 'Mathematics', score: 82 },
-  { subject: 'Science', score: 76 },
-  { subject: 'English', score: 90 },
-  { subject: 'ICT', score: 88 },
-];
-
 export default function SBAScreen() {
+  const { sba } = useAppData();
+
   return (
     <ScreenContainer title="SBA">
       <View style={styles.container}>
-        {marks.map((item) => (
-          <View key={item.subject} style={styles.item}>
-            <Text style={styles.label}>{item.subject}</Text>
-            <View style={styles.progressTrack}>
-              <View style={[styles.progressFill, { width: `${item.score}%` }]} />
+        {sba.map((item) => {
+          const total = Object.values(item.scores).reduce((sum, value) => sum + value, 0);
+          const average = total / Object.keys(item.scores).length;
+
+          return (
+            <View key={item.subject} style={styles.item}>
+              <Text style={styles.label}>{item.subject}</Text>
+              <Text style={styles.score}>{average.toFixed(0)} avg</Text>
+              <View style={styles.progressTrack}>
+                <View style={[styles.progressFill, { width: `${Math.min(average, 100)}%` }]} />
+              </View>
             </View>
-            <Text style={styles.score}>{item.score}%</Text>
-          </View>
-        ))}
+          );
+        })}
       </View>
     </ScreenContainer>
   );
@@ -39,9 +40,14 @@ const styles = StyleSheet.create({
   },
   label: {
     color: COLORS.text,
-    fontSize: 14,
+    fontSize: 15,
+    fontWeight: '700',
     marginBottom: 8,
-    fontWeight: '600',
+  },
+  score: {
+    color: COLORS.muted,
+    fontSize: 12,
+    marginBottom: 8,
   },
   progressTrack: {
     height: 10,
@@ -53,10 +59,5 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: COLORS.secondary,
     borderRadius: 999,
-  },
-  score: {
-    marginTop: 6,
-    color: COLORS.muted,
-    fontSize: 12,
   },
 });

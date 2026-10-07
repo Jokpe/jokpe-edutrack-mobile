@@ -1,26 +1,25 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
 import ScreenContainer from '../../components/ScreenContainer';
+import { useAppData } from '../../context/AppDataContext';
 import { COLORS } from '../../theme/colors';
 
-const students = [
-  { id: '1', name: 'Ama Mensah', gender: 'Female', className: 'KG1' },
-  { id: '2', name: 'Kojo Boateng', gender: 'Male', className: 'Basic 3' },
-  { id: '3', name: 'Efua Tetteh', gender: 'Female', className: 'JHS 1' },
-  { id: '4', name: 'Nana Osei', gender: 'Male', className: 'SHS 2' },
-];
-
 export default function StudentsScreen() {
+  const { students } = useAppData();
+
   return (
     <ScreenContainer title="Students">
       <FlatList
         data={students}
         keyExtractor={(item) => item.id}
+        contentContainerStyle={{ paddingBottom: 24 }}
         renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.name}>{item.name}</Text>
+          <Pressable style={styles.card}>
+            <Text style={styles.name}>{item.fullName}</Text>
             <Text style={styles.meta}>{item.gender} • {item.className}</Text>
-          </View>
+            <Text style={styles.meta}>Admission: {item.admissionNumber || 'N/A'}</Text>
+            <Text style={styles.meta}>Guardian: {item.guardianName || 'N/A'}</Text>
+          </Pressable>
         )}
       />
     </ScreenContainer>
@@ -30,20 +29,24 @@ export default function StudentsScreen() {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
-    borderRadius: 14,
+    borderRadius: 16,
     padding: 16,
     marginBottom: 12,
     borderLeftWidth: 5,
     borderLeftColor: COLORS.primary,
+    shadowColor: '#000',
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
+    elevation: 2,
   },
   name: {
     fontSize: 16,
-    fontWeight: '700',
     color: COLORS.text,
+    fontWeight: '700',
   },
   meta: {
-    fontSize: 13,
     color: COLORS.muted,
-    marginTop: 6,
+    fontSize: 13,
+    marginTop: 4,
   },
 });

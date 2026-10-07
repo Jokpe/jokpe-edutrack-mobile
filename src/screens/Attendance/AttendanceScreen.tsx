@@ -1,23 +1,20 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import ScreenContainer from '../../components/ScreenContainer';
+import { useAppData } from '../../context/AppDataContext';
 import { COLORS } from '../../theme/colors';
 
-const records = [
-  { subject: 'Math', present: 19, total: 20 },
-  { subject: 'Science', present: 18, total: 20 },
-  { subject: 'English', present: 17, total: 20 },
-  { subject: 'ICT', present: 20, total: 20 },
-];
-
 export default function AttendanceScreen() {
+  const { attendance } = useAppData();
+
   return (
     <ScreenContainer title="Attendance">
       <View style={styles.container}>
-        {records.map((item) => (
-          <View key={item.subject} style={styles.row}>
-            <Text style={styles.subject}>{item.subject}</Text>
+        {attendance.map((item) => (
+          <View key={item.date} style={styles.row}>
+            <Text style={styles.day}>{item.date}</Text>
             <Text style={styles.value}>{item.present}/{item.total}</Text>
+            <Text style={styles.pct}>{Math.round((item.present / item.total) * 100)}%</Text>
           </View>
         ))}
       </View>
@@ -29,21 +26,31 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     borderRadius: 16,
-    padding: 14,
+    padding: 12,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#eef2f7',
+    borderBottomColor: '#edf2f7',
   },
-  subject: {
-    fontSize: 15,
+  day: {
+    width: 60,
     color: COLORS.text,
+    fontWeight: '700',
   },
   value: {
-    fontWeight: '700',
+    flex: 1,
+    textAlign: 'center',
     color: COLORS.primary,
+    fontWeight: '700',
+  },
+  pct: {
+    minWidth: 60,
+    textAlign: 'right',
+    color: COLORS.muted,
+    fontWeight: '600',
   },
 });

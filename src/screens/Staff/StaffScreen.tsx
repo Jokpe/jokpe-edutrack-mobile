@@ -1,25 +1,26 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import ScreenContainer from '../../components/ScreenContainer';
+import { useAppData } from '../../context/AppDataContext';
 import { COLORS } from '../../theme/colors';
 
-const staff = [
-  { id: '1', name: 'Mr. Adjei', role: 'Class Teacher', status: 'Present' },
-  { id: '2', name: 'Mrs. Owusu', role: 'Mathematics', status: 'On leave' },
-  { id: '3', name: 'Mr. Danso', role: 'Science', status: 'Present' },
-];
-
 export default function StaffScreen() {
+  const { staff } = useAppData();
+
   return (
     <ScreenContainer title="Staff">
       <FlatList
         data={staff}
         keyExtractor={(item) => item.id}
+        contentContainerStyle={{ paddingBottom: 24 }}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.name}>{item.fullName}</Text>
             <Text style={styles.meta}>{item.role}</Text>
-            <Text style={[styles.status, item.status === 'Present' ? styles.present : styles.leave]}>{item.status}</Text>
+            <Text style={styles.meta}>{item.phone}</Text>
+            <Text style={[styles.status, item.hasLoginAccess ? styles.present : styles.leave]}>
+              {item.hasLoginAccess ? 'Has login access' : 'No login access'}
+            </Text>
           </View>
         )}
       />
@@ -40,18 +41,19 @@ const styles = StyleSheet.create({
     color: COLORS.text,
   },
   meta: {
-    marginTop: 6,
     color: COLORS.muted,
+    marginTop: 6,
+    fontSize: 13,
   },
   status: {
     marginTop: 10,
-    fontWeight: '700',
-    fontSize: 12,
     alignSelf: 'flex-start',
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 999,
     overflow: 'hidden',
+    fontWeight: '700',
+    fontSize: 12,
   },
   present: {
     backgroundColor: '#dcfce7',
